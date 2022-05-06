@@ -3,9 +3,9 @@ const {getDisplayPositions, getDisplayPosition, createDisplayPosition, updateDis
 const router = express.Router()
 const {protect} = require('../middleware/authMiddleware')
 
-router.route('/positions').get(protect, getDisplayPositions)
+router.route('/').get(protect, getDisplayPositions)
 
-router.route('/positions/:id').get(protect, getDisplayPosition).put(protect, updateDisplayPosition)
+router.route('/:id').get(protect, getDisplayPosition).put(protect, updateDisplayPosition)
 
-router.route('/positions/create').post(protect, createDisplayPosition)
+router.route('/create').post(protect, createDisplayPosition)
 

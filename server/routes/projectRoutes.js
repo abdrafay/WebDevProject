@@ -3,10 +3,10 @@ const { getProjects, getProject, createProject, updateProject, deleteProject } =
 const router = express.Router()
 const {protect} = require('../middleware/authMiddleware')
 
-router.route('/projects').get(protect, getProjects)
+router.route('/').get(protect, getProjects)
 
-router.route('/projects/:id').get(protect, getProject).put(protect, updateProject)
+router.route('/:id').get(protect, getProject).put(protect, updateProject)
 
-router.route('/projects/create').post(protect, createProject)
+router.route('/create').post(protect, createProject)
 
-route.route('/projects/delete/:id').delete(protect, updateProject)
+route.route('/delete/:id').delete(protect, updateProject)
