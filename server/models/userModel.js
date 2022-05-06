@@ -22,28 +22,20 @@ const userSchema = mongoose.Schema(
             type: String
         },
         projects: [{
-            name: String,
-            description: String,
             project: {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true,
                 ref: 'Project',
-                tasks: [{
-                    type: mongoose.Schema.Types.ObjectId,
-                    name: String,
-                    status: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        required: true,
-                        ref: 'Status'
-                    },
-                    timeLog: String,
-                    ref: 'Task'
-                }]
             },
+            tasks: [
+                {
+                    task: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'Task'
+                    }
+                }
+            ],
             role: {
                 type: mongoose.Schema.Types.ObjectId,
-                name: String,
-                required: true,
                 ref: 'Role'
             },
         }]

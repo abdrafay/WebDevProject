@@ -92,13 +92,7 @@ const updateTask = async (req, res) => {
         timeLog: req.body.timeLog
     })
     if(task) {
-        // update the task in the project also
-        const project = await Project.findByIdAndUpdate({"_id": req.params.id, "tasks._id": task._id}, {
-            $set: {
-                "tasks.$": task
-            }
-        } )
-        res.json({"Task": task, "Project": project})
+        res.json({task})
     }
     else {
         res.status(400)

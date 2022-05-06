@@ -115,14 +115,42 @@ const getUserProfile = async (req, res) => {
  */
 
 const updateUserProfile = async (req, res) => {
-    const { firstName, lastName, email, password, role } = req.body
+    const { firstName, lastName, email, password, project, role, tasks } = req.body
     const user = await User.findById(req.user._id)
+    let tsk = []
+    let prj = []
+    if(project) {
+        prj.push({
+            project: project._id,
+            role,
+            tasks: tsk       
+        })
+    } else {
+        prj = user.projects
+    }
+    if(tasks) {
+        tasks.map(task => {
+            tsk.push({
+                task: task._id
+            })
+        })
+    } else {
+        user.projects.map(project => {
+            tsk.push({
+                task: project.task
+                })
+        })
+
+    }
+    
+
     if(user) {
         user.firstName = firstName || user.firstName
         user.lastName = lastName || user.lastName
         user.email = email || user.email
         user.avatar = avatar || user.avatar
-        user.projects = projects || user.projects
+        user.projects = prj
+        // add projects to user
         if(password) {
             user.password = password
         }
@@ -144,4 +172,40 @@ const updateUserProfile = async (req, res) => {
     }
 }   
 
-module.exports = { authUser, registerUser, getUserProfile, updateUserProfile }
+/**
+ * @desc Join a project by using the project key
+ * @route PUT /api/projects/join
+ * @param {string} key
+ * @returns {object} project
+ * @access Private
+ */
+
+ const joinProject = async (req, res) => {
+    const project = await Project.findOne({
+        key: req.body.key
+    })
+    if(project) {
+        // find user with id in the project
+        let ind = projects.users.findIndex(user => {
+            return user.user === req.user._id
+        })
+        const user = await User.findById(req.user._id)
+        project.users[ind].status = 'joined'
+        user.projects.push({
+            project: project._id,
+            role: role._id,
+            tasks: []
+        })
+        await user.save()
+        await project.save()
+        res.json({
+            project
+        })
+    } else {
+        res.status(400)
+        throw new Error('Project not found')
+    }
+}
+
+
+module.exports = { authUser, registerUser, getUserProfile, updateUserProfile ,joinProject }

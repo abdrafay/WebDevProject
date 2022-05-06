@@ -7,9 +7,11 @@ const displayPositionsSchema = mongoose.Schema(
             ref: 'User'
         },
         projects:[{
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: 'Project'
+            project: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true,
+                ref: 'Project'
+            }
         }]
     },
     {

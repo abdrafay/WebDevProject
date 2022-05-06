@@ -8,33 +8,35 @@ const projectSchema = mongoose.Schema(
         description: {
             type: String,
         },
+        key: {
+            type: String,
+            required: true
+        },
         users: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                name: String,
-                required: true,
-                ref: 'User',
+                user: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    required: true,
+                    ref: 'User'
+                },
                 role: {
                     type: mongoose.Schema.Types.ObjectId,
-                    name: String,
                     required: true,
                     ref: 'Role'
+                },
+                status: {
+                    type: String,
+                    required: true
                 }
             }
         ],
         tasks: [
             {
-                type: mongoose.Schema.Types.ObjectId,
-                name: String,
-                description: String,
-                status: {
+                task: {
                     type: mongoose.Schema.Types.ObjectId,
-                    name: String,
-                    required: true,
-                    ref: 'Status'
-                },
-                timeLog: String,
-                ref: 'Task'
+                    ref: 'Task'
+                }
+                
             }
         ]},
     {
@@ -42,3 +44,5 @@ const projectSchema = mongoose.Schema(
     }
 )
 const Project = mongoose.model('Project', projectSchema)
+
+module.exports = Project

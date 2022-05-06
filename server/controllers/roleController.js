@@ -46,11 +46,12 @@ const getRole = async (req, res) => {
  */
 
 const createRole = async (req, res) => {
-    const role = await Role.create({
+    const role = new Role({
         name: req.body.name
-    });
-    if(role) {
-        res.json({role})
+    })
+    const createdRole = await role.save()
+    if(createdRole) {
+        res.json({createdRole})
     }
     else {
         res.status(400)

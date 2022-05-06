@@ -1,5 +1,7 @@
 const Project = require('../models/projectModel')
 const Task = require('../models/taskModel')
+const short = require('short-uuid');
+const translator = short(); // Defaults to flickrBase58
 
 /**
  * @desc Get all projects of a user
@@ -51,14 +53,29 @@ const getProject = async (req, res) => {
  * @access Private
  */
 const createProject = async (req, res) => {
-    const project = await Project.create({
+    key = translator.new()
+    let arr = []
+    // get user details with id 
+    const user = await User.findById(req.user._id)
+    let name = "Admin"
+    if(user) {
+        // get user roles with id
+    const role = await Role.findOne({ name })
+    arr.push({
+        user: req.user._id,
+        role: role._id
+    })
+    }
+    const project = new Project({
         name: req.body.name,
         description: req.body.description,
-        user: req.user._id
+        users: arr,
+        key: key
     })
-    if(project) {
+    const createdProject = await project.save()
+    if(createdProject) {
         res.json({
-            project
+            createdProject
         })
     } else {
         res.status(400)
@@ -81,7 +98,7 @@ const updateProject = async (req, res) => {
     const project = await Project.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
         description: req.body.description,
-        user: req.user._id,
+        users: req.users,
         tasks: req.body.tasks || []
     })
     if(project) {
@@ -123,10 +140,59 @@ const deleteProject = async (req, res) => {
     }
 }
 
+/**
+ * @desc Add a user to a project
+ * @route POST /api/projects/:id/addUser
+ * @param {string} id
+ * @param {string} user
+ * @returns {object} project
+ */
+const addUser = async (req, res) => {
+    const project = await Project.findById(req.params.id)
+    if(project) {
+        const user = await User.findById(req.body.user)
+        if(user) {
+            let name = "User"
+            // const updUser = await User.findByIdAndUpdate(user._id, {
+            //     projects: [...user.projects, {
+            //     }]
+            // }, (err, data) => {
+            //     if(err) {
+            //         throw new Error('User not added')
+            //     } else {
+            //         console.log('User added')
+            //     }
+            // })
+
+            const role = await Role.findOne({ name })
+            project.users.push({
+                user: req.user._id,
+                role: role._id,
+                status: 'pending'
+            })
+            await user.save()
+            // add this project to the user
+            await project.save()
+            res.json({
+                project
+            })
+        } else {
+            res.status(400)
+            throw new Error('User not found')
+        }
+    } else {
+        res.status(400)
+        throw new Error('Project not found')
+    }
+}
+
+
 module.exports = {
     getProjects,
     getProject,
     createProject,
     updateProject,
-    deleteProject
+    deleteProject,
+    addUser,
+    
 }
