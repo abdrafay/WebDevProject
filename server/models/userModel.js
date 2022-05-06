@@ -18,11 +18,24 @@ const userSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        role: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "Role"
+        avatar: {
+            type: String
         },
+        projects: [{
+            name: String,
+            description: String,
+            project: {
+                type: mongoose.Schema.Types.ObjectId,
+                required: true,
+                ref: 'Project'
+            },
+            role: {
+                type: mongoose.Schema.Types.ObjectId,
+                name: String,
+                required: true,
+                ref: 'Role'
+            },
+        }]
     },
     {
         timestamps: true

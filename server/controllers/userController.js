@@ -22,7 +22,8 @@ const authUser = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            role: user.role,
+            avatar: user.avatar,
+            projects: user.projects,
             token: generateToken(user._id)
         })
     } else {
@@ -38,7 +39,8 @@ const authUser = async (req, res) => {
  * @param {string} lastName
  * @param {string} email
  * @param {string} password
- * @param {string} role
+ * @param {string} avatar
+ * @param {array} projects
  * @returns {object} user
  */
 
@@ -54,7 +56,8 @@ const registerUser = async (req, res) => {
         lastName,
         email,
         password,
-        role
+        avatar,
+        projects
     })
     if(user) {
         res.status(201).json({
@@ -62,7 +65,8 @@ const registerUser = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            role: user.role,
+            avatar: user.avatar,
+            projects: user.projects,
             token: generateToken(user._id)
         })
     } else {
@@ -87,7 +91,8 @@ const getUserProfile = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            role: user.role,
+            avatar: user.avatar,
+            projects: user.projects,
             token: generateToken(user._id)
         })
     } else {
@@ -103,7 +108,8 @@ const getUserProfile = async (req, res) => {
  * @param {string} lastName
  * @param {string} email
  * @param {string} password
- * @param {string} role
+ * @param {string} avatar
+ * @param {array} projects
  * @returns {object} user
  * @access Private
  */
@@ -115,7 +121,8 @@ const updateUserProfile = async (req, res) => {
         user.firstName = firstName || user.firstName
         user.lastName = lastName || user.lastName
         user.email = email || user.email
-        user.role = role || user.role
+        user.avatar = avatar || user.avatar
+        user.projects = projects || user.projects
         if(password) {
             user.password = password
         }
@@ -126,7 +133,8 @@ const updateUserProfile = async (req, res) => {
                 firstName: updatedUser.firstName,
                 lastName: updatedUser.lastName,
                 email: updatedUser.email,
-                role: updatedUser.role,
+                avatar: updatedUser.avatar,
+                projects: updatedUser.projects,
                 token: generateToken(updatedUser._id)
             })
         }
