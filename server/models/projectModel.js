@@ -21,8 +21,22 @@ const projectSchema = mongoose.Schema(
                     ref: 'Role'
                 }
             }
-        ]
-    },
+        ],
+        tasks: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                name: String,
+                description: String,
+                status: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    name: String,
+                    required: true,
+                    ref: 'Status'
+                },
+                timeLog: String,
+                ref: 'Task'
+            }
+        ]},
     {
         timestamps: true
     }

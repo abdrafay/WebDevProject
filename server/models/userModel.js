@@ -27,7 +27,18 @@ const userSchema = mongoose.Schema(
             project: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true,
-                ref: 'Project'
+                ref: 'Project',
+                tasks: [{
+                    type: mongoose.Schema.Types.ObjectId,
+                    name: String,
+                    status: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        required: true,
+                        ref: 'Status'
+                    },
+                    timeLog: String,
+                    ref: 'Task'
+                }]
             },
             role: {
                 type: mongoose.Schema.Types.ObjectId,
