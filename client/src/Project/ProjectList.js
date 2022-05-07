@@ -40,7 +40,7 @@ export default function ProjectList() {
 
   return (
     <TableContainer component={Paper}>
-      <Grid container spacing={5} xs={12}>
+      <Grid container spacing={5} >
         <Grid item xs={12}>
           <Paper
             component="form"
@@ -77,9 +77,9 @@ export default function ProjectList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map((row, ind) => (
             <TableRow
-              key={row.key}
+              key={ind}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">

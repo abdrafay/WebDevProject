@@ -54,7 +54,6 @@ const Dashboard = () => {
             <Button
               variant="contained"
               color="inherit"
-              justifyContent="left"
               startIcon={<AddCircleOutlineIcon />}
               onClick={handleClickOpen}
             >

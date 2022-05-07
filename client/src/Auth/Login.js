@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useContext, useEffect} from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,16 +11,63 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import axios from 'axios'
+import StateContext from "../StateContext";
+import DispatchContext from "../DispatchContext";
+import {setCookie} from "../Functions/cookies";
+import {useNavigate} from 'react-router-dom';
 
-function Login() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
+
+const Login = () => {
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
+  const appState = useContext(StateContext)
+  const appDispatch = useContext(DispatchContext)
+
+  // check if logged in already navigate to dashboard
+  useEffect(() => {
+    if (appState.loggedIn) {
+      navigate('/dashboard')
+    }
+  }, [])
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setLoading(true)
+    const data = new FormData(event.currentTarget)
+    let email = data.get("email")
+    let password = data.get("password")
+    if (email && password !== '') {
+      console.log('making Request')
+      try {
+          const response = await axios.post(`/api/users/login`, { email: email, password: password })
+          console.log(response)
+          if (response.data.email === email) {
+              setLoading(false)
+          //     // setSuccess(true)
+              // console.log(response.data)
+              let user = {
+                  id: response.data._id,
+                  firstName: response.data.firstName,
+                  lastName: response.data.lastName,
+                  email: response.data.email,
+                  avatar: response.data.avatar,
+              }
+              appDispatch({ type: "login", loggData: user, projects: response.data.projects, token: response.data.token })
+              setCookie('auth', response.data.token, 1)
+              // navigate to dashboard route
+              navigate('/dashboard')
+
+              
+          }
+      } catch (err) {
+          setLoading(false)
+          console.log('error', err)
+          // setAlertMessage({ open: true, message: e.response.data.message, alertSuccess: false })
+
+      }
+  }
+
+  }
 
   return (
     <Container component="main" maxWidth="xs">
