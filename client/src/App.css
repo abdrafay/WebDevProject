@@ -1,3 +1,14 @@
 *{
   margin: 0;
 }
+.projectCard {
+  display: block; 
+padding: 20px;
+border: 1px solid #eee;
+border-radius: 10px;
+box-shadow: 2px 2px 2px 0px #eee;
+}
+.projectCard a {
+  text-decoration: none;
+  color: #000;
+}
