@@ -22,6 +22,14 @@ const taskSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        startTime: {
+            type: String,
+            required: true
+        },
+        endTime: {
+            type: String,
+            required: true
+        },
         project: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
@@ -29,7 +37,6 @@ const taskSchema = mongoose.Schema(
         },
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            required: true,
             ref: 'User'
         },
         status: {

@@ -15,4 +15,6 @@ router.route('/:id/tasks/:tid').put(protect, updateTask)
 
 router.route('/:id/tasks/create').post(protect, createTask)
 
-router.route('/tasks/delete/:id').delete(protect, deleteTask)
+router.route('/:id/tasks/delete/:tid').delete(protect, deleteTask)
+
+module.exports = router

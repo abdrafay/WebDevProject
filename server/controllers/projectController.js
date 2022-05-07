@@ -1,4 +1,6 @@
 const Project = require('../models/projectModel')
+const User = require('../models/userModel')
+const Role = require('../models/roleModel')
 const Task = require('../models/taskModel')
 const short = require('short-uuid');
 const translator = short(); // Defaults to flickrBase58
@@ -58,13 +60,13 @@ const createProject = async (req, res) => {
     // get user details with id 
     const user = await User.findById(req.user._id)
     let name = "Admin"
-    if(user) {
-        // get user roles with id
     const role = await Role.findOne({ name })
-    arr.push({
-        user: req.user._id,
-        role: role._id
-    })
+if(user) {
+        arr.push({
+            _id: req.user._id,
+            role: role._id,
+            status: 'joined'
+        })
     }
     const project = new Project({
         name: req.body.name,
@@ -72,7 +74,12 @@ const createProject = async (req, res) => {
         users: arr,
         key: key
     })
+    user.projects.push({
+        _id: project._id,
+        role: role._id,
+    })
     const createdProject = await project.save()
+    await user.save()
     if(createdProject) {
         res.json({
             createdProject
@@ -88,22 +95,24 @@ const createProject = async (req, res) => {
  * @route PUT /api/projects/:id
  * @param {string} name
  * @param {string} description
- * @param {string} user
- * @param {array} tasks - array of tasks - optional
  * @returns {object} project
  * @access Private
  */
 
 const updateProject = async (req, res) => {
-    const project = await Project.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
-        description: req.body.description,
-        users: req.users,
-        tasks: req.body.tasks || []
-    })
+    const project = await Project.findById(req.params.id)
     if(project) {
+        project.name = req.body.name
+        project.description = req.body.description
+    } else {
+        res.status(400)
+        throw new Error('Project not found')
+    }
+    const updatedProject = await project.save()
+
+    if(updatedProject) {
         res.json({
-            project
+            updatedProject
         })
     } else {
         res.status(400)

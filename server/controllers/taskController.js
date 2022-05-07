@@ -1,6 +1,5 @@
-const Task = require('../models/task')
-const Project = require('../models/project')
-const User = require('../models/user')
+const {Task, TaskStatus} = require('../models/taskModel')
+const Project = require('../models/projectModel')
 
 
 /**
@@ -50,20 +49,34 @@ const getTask = async (req, res) => {
  * @access Private
  */
 const createTask = async (req, res) => {
-    const task = await Task.create({
+    // get todo task status
+    const status = await TaskStatus.findOne({
+        name: 'Todo'
+    })
+    const task = new Task({
         name: req.body.name,
         description: req.body.description,
-        project: req.params.id
+        project: req.params.id,
+        status: status._id,
+        startTime: req.body.startTime,
+        endTime: req.body.endTime,
+        user: req.params.user || null
     })
-    if(task) {
-        
-        const project = await Project.findByIdAndUpdate(req.params.id, {
-            $push: {
-                tasks: task
-            }
+    const createdTask = await task.save()
+    if(createdTask) {
+        // const project = await Project.findByIdAndUpdate(req.params.id, {
+        //     $push: {
+        //         tasks: task
+        //     }
+        // })
+
+        const project = await Project.findById(req.params.id)
+        project.tasks.push({
+            _id: createdTask._id
         })
-        if(project) {
-            res.json({"task": task, "project": project})
+        const updatedProject = await project.save()
+        if(updatedProject && createdTask) {
+            res.json({"task": createdTask, "project": updatedProject})
         }
     }else {
         res.status(400)
@@ -77,22 +90,25 @@ const createTask = async (req, res) => {
 /**
  * @desc Update a task
  * @route PUT /api/projects/:id/tasks/:tid
- * @param {string} name
- * @param {string} description
- * @param {string} project
- * @param {string} timeLog
+ * @param {Date} startTime
+ * @param {Date} endTime
  * @returns {object} task
  * @access Private
  */
 const updateTask = async (req, res) => {
-    const task = await Task.findByIdAndUpdate(req.params.tid, {
-        name: req.body.name,
-        description: req.body.description,
-        project: req.params.id,
-        timeLog: req.body.timeLog
-    })
+    // const task = await Task.findByIdAndUpdate(req.params.tid, {
+    //     name: req.body.name,
+    //     description: req.body.description,
+    //     project: req.params.id,
+    // })
+    const task = await Task.findById(req.params.tid)
     if(task) {
-        res.json({task})
+        task.startTime = req.body.startTime,
+        task.endTime = req.body.endTime
+    }
+    const updatedTask = await task.save()
+    if(updatedTask) {
+        res.json({updatedTask})
     }
     else {
         res.status(400)
@@ -102,22 +118,30 @@ const updateTask = async (req, res) => {
 
 /**
  * @desc Delete a task
- * @route DELETE /api/projects/:id/tasks/:id
+ * @route DELETE /api/projects/:id/tasks/:tid
  * @param {string} id
+ * @param {string} tid
  * @returns {object} task
  * @access Private
  */
 const deleteTask = async (req, res) => {
-    const task = await Task.findByIdAndDelete(req.params.id)
+    const task = await Task.findByIdAndDelete(req.params.tid)
     // delete from project also
-    const project = await Project.findByIdAndDelete(req.params.id, {
-        $pull: {
-            tasks: task
-        }
-    })
-
+    // const project = await Project.findByIdAndDelete(req.params.id, {
+    //     $pull: {
+    //         tasks: task
+    //     }
+    // })
     if(task) {
-        res.json({task})
+        const project = await Project.findById(req.params.id)
+        project.tasks.forEach(tsk => {
+            if(tsk._id === req.params.tid) {
+                // project.tasks.({_id: tsk._id})
+                project.tasks = project.tasks.filter(tsk => tsk._id !== req.params.tid)
+            }
+        })
+        const updatedProject = await project.save()
+        res.json("Task Deleted", {updatedProject})
     }
     else {
         res.status(400)

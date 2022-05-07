@@ -13,7 +13,7 @@ const authUser = async (req, res) => {
     const { email, password } = req.body
     const user = await User.findOne({ email })
     const isMatch = await user.matchPassword(password)
-    if (user) {
+    if (!user) {
         return res.status(400).json({ msg: 'User not found' })
     }
     if (isMatch) {
@@ -45,19 +45,18 @@ const authUser = async (req, res) => {
  */
 
 const registerUser = async (req, res) => {
-    const { firstName, lastName, email, password, role } = req.body
+    const { firstName, lastName, email, password, avatar } = req.body
     const userExist = await User.findOne({ email })
     if (userExist) {
         res.status(400)
         throw new Error('User already exists' )
     }
     const user = await User.create({
-        firstName,
-        lastName,
-        email,
-        password,
-        avatar,
-        projects
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        avatar: avatar || '',
     })
     if(user) {
         res.status(201).json({
@@ -65,7 +64,7 @@ const registerUser = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            avatar: user.avatar,
+            avatar: user.avatar || '',
             projects: user.projects,
             token: generateToken(user._id)
         })
@@ -93,7 +92,6 @@ const getUserProfile = async (req, res) => {
             email: user.email,
             avatar: user.avatar,
             projects: user.projects,
-            token: generateToken(user._id)
         })
     } else {
         res.status(400)

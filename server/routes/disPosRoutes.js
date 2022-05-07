@@ -9,3 +9,4 @@ router.route('/:id').get(protect, getDisplayPosition).put(protect, updateDisplay
 
 router.route('/create').post(protect, createDisplayPosition)
 
+module.exports = router

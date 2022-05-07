@@ -1,8 +1,4 @@
 const DisplayPosition = require('../models/disPosModel')
-const Project = require('../models/projectModel')
-const Task = require('../models/taskModel')
-const User = require('../models/userModel')
-const Role = require('../models/roleModel')
 
 /**
  * @desc Get all DisplayPositionsProjects of a user
@@ -89,7 +85,7 @@ const updateDisplayPosition = async (req, res) => {
     }
 }
 
-moudule.exports = {
+module.exports = {
     getDisplayPositions,
     getDisplayPosition,
     createDisplayPosition,

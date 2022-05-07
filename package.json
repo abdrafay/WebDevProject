@@ -2,10 +2,10 @@
   "name": "webdevproject",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node backend/server",
-    "server": "nodemon backend/server",
+    "start": "node server/server",
+    "server": "nodemon server/server",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },

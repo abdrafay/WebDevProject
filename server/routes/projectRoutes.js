@@ -9,4 +9,6 @@ router.route('/:id').get(protect, getProject).put(protect, updateProject)
 
 router.route('/create').post(protect, createProject)
 
-route.route('/delete/:id').delete(protect, updateProject)
+router.route('/delete/:id').delete(protect, updateProject)
+
+module.exports = router

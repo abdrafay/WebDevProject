@@ -1,4 +1,4 @@
-const mongoose = require('monggoose')
+const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const userSchema = mongoose.Schema(
     {
@@ -26,14 +26,6 @@ const userSchema = mongoose.Schema(
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Project',
             },
-            tasks: [
-                {
-                    task: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: 'Task'
-                    }
-                }
-            ],
             role: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Role'
