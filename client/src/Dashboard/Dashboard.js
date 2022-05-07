@@ -2,14 +2,13 @@ import React from "react";
 import ProjectList from "../Project/ProjectList";
 import ProjectForm from "../Project/ProjectForm";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, Stack } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import ShareIcon from "@mui/icons-material/Share";
+import JoinForm from "../Project/JoinForm";
 
 const darkTheme = createTheme({
   palette: {
@@ -19,6 +18,15 @@ const darkTheme = createTheme({
 
 const Dashboard = () => {
   const [open, setOpen] = React.useState(false);
+  const [join, setJoin] = React.useState(false);
+
+  const handleJoin = () => {
+    setJoin(true);
+  };
+
+  const handleUnjoin = () => {
+    setJoin(false);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -42,15 +50,26 @@ const Dashboard = () => {
           }}
         >
           <h1>Project</h1>
-          <Button
-            variant="contained"
-            color="inherit"
-            justifyContent="left"
-            startIcon={<AddCircleOutlineIcon />}
-            onClick={handleClickOpen}
-          >
-            Create Project
-          </Button>
+          <Stack direction="row" spacing={3}>
+            <Button
+              variant="contained"
+              color="inherit"
+              justifyContent="left"
+              startIcon={<AddCircleOutlineIcon />}
+              onClick={handleClickOpen}
+            >
+              Create Task
+            </Button>
+            {/* <Button
+              variant="contained"
+              color="inherit"
+              justifyContent="left"
+              startIcon={<ShareIcon />}
+              onClick={handleJoin}
+            >
+              Join Project
+            </Button> */}
+          </Stack>
         </Box>
         <ProjectList />
       </Container>
@@ -61,16 +80,28 @@ const Dashboard = () => {
           maxWidth={"md"}
           fullWidth={true}
         >
-          <DialogTitle>Project Form</DialogTitle>
+          {/* <DialogTitle>Project Form</DialogTitle> */}
           <DialogContent>
-            {/* <DialogContentText>
-              To subscribe to this website, please enter your email address
-              here. We will send updates occasionally.
-            </DialogContentText> */}
             <ProjectForm />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog
+          open={join}
+          onClose={handleUnjoin}
+          maxWidth={"md"}
+          fullWidth={true}
+        >
+          {/* <DialogTitle>Project Form</DialogTitle> */}
+          <DialogContent>
+            <JoinForm />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleUnjoin}>Cancel</Button>
           </DialogActions>
         </Dialog>
       </div>
