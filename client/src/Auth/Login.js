@@ -25,11 +25,11 @@ const Login = () => {
   const appDispatch = useContext(DispatchContext)
 
   // check if logged in already navigate to dashboard
-  useEffect(() => {
-    if (appState.loggedIn) {
-      navigate('/dashboard')
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (appState.loggedIn) {
+  //     navigate('/dashboard')
+  //   }
+  // }, [])
   const handleSubmit = async (event) => {
     event.preventDefault()
     setLoading(true)
@@ -55,7 +55,7 @@ const Login = () => {
               appDispatch({ type: "login", loggData: user, projects: response.data.projects, token: response.data.token })
               setCookie('auth', response.data.token, 1)
               // navigate to dashboard route
-              navigate('/dashboard')
+              // navigate('/dashboard')
 
               
           }

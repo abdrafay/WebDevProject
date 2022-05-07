@@ -19,7 +19,7 @@ const App = () => {
   const initialState = {
     loggedIn: Boolean(getCookie("auth")),
     user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem('user')) : null,
-    token: getCookie("auth") && null,
+    token: getCookie("auth") ? getCookie("auth") : null,
     projects: localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem('tasks')) : [],
     tasks: localStorage.getItem("projects") ? JSON.parse(localStorage.getItem('projects')) : [],
   }
@@ -70,9 +70,15 @@ const App = () => {
           <Navbar />
           <Router>
             <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
+              {state.loggedIn ? (
+                <Route path="/" element={<Dashboard />} />
+              ) : (
+                <>
+                  <Route path="/" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                </>
+              )}
+              {/* <Route path="/dashboard" element={<Dashboard />} /> */}
             </Routes>
           </Router>
         </ThemeProvider>
