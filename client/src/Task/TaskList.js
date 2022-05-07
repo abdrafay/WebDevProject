@@ -12,11 +12,20 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { useTheme } from "@mui/material/styles";
+
 import { Avatar, Chip, Grid, IconButton, InputBase } from "@mui/material";
 
 function createData(title, nature, startdate, enddate, status, owner) {
   return { title, nature, startdate, enddate, status, owner };
 }
+
+const status = ["Todo", "In Progress", "Completed", "Closed"];
 
 const rows = [
   createData(
@@ -48,9 +57,40 @@ const rows = [
 const options = ["Edit", "Delete"];
 
 const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
-export default function ProjectList() {
+function getStyles(status, personName, theme) {
+  return {
+    fontWeight:
+      personName.indexOf(status) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
+export default function TaskList() {
+  const theme = useTheme();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [personName, setPersonName] = React.useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setPersonName(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -90,7 +130,10 @@ export default function ProjectList() {
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
-            <TableCell align="center">Key</TableCell>
+            <TableCell align="center">Nature</TableCell>
+            <TableCell align="center">Start-Date</TableCell>
+            <TableCell align="center">End-Date</TableCell>
+            <TableCell align="center">Status</TableCell>
             <TableCell align="center">Owner</TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -113,10 +156,41 @@ export default function ProjectList() {
               <TableCell align="center">{row.startdate}</TableCell>
               <TableCell align="center">{row.enddate}</TableCell>
               <TableCell align="center">
-                <Chip
+                {/* <Chip
                   label={row.status}
                   color={row.status === "todo" ? "primary" : "success"}
-                />
+                /> */}
+                <FormControl sx={{ m: 0.2, width: 150 }}>
+                  <Select
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    // multiple
+                    value={personName}
+                    onChange={handleChange}
+                    input={
+                      <OutlinedInput id="select-multiple-chip" label="Chip" />
+                    }
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        <Chip
+                          label={row.status}
+                          color={row.status === "todo" ? "primary" : "success"}
+                        />
+                      </Box>
+                    )}
+                    // MenuProps={MenuProps}
+                  >
+                    {status.map((name) => (
+                      <MenuItem
+                        key={name}
+                        value={name}
+                        // style={getStyles(name, personName, theme)}
+                      >
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </TableCell>
               <TableCell align="center">
                 <Chip

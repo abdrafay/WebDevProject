@@ -5,6 +5,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
+const user = false;
+
 function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -13,9 +15,18 @@ function Navbar() {
           <Typography variant="h6" component="div" noWrap sx={{ flexGrow: 1 }}>
             JIRA
           </Typography>
-          <Button sx={{ my: 1, mx: 1.5 }} color="inherit" href=".\">
+          {!user ? (
+            <Button sx={{ my: 1, mx: 1.5 }} color="inherit" href=".\">
+              Home
+            </Button>
+          ) : (
+            <Button sx={{ my: 1, mx: 1.5 }} color="inherit" href=".\">
+              Logout
+            </Button>
+          )}
+          {/* <Button sx={{ my: 1, mx: 1.5 }} color="inherit" href=".\">
             Home
-          </Button>
+          </Button> */}
           <Button sx={{ my: 1, mx: 1.5 }} color="inherit" href="\dashboard">
             Dashboard
           </Button>
