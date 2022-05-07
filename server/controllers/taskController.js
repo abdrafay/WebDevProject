@@ -60,6 +60,7 @@ const createTask = async (req, res) => {
         status: status._id,
         startTime: req.body.startTime,
         endTime: req.body.endTime,
+        nature: req.body.nature,
         user: req.params.user || null
     })
     const createdTask = await task.save()
@@ -149,11 +150,31 @@ const deleteTask = async (req, res) => {
     }
 }
 
+/**
+ * @desc Get all task Status
+ * @route GET /api/projects/tasks/status/:id
+ * @param {string} id
+ * @returns {object} taskStatus
+ */
+
+const getTaskStatus = async (req, res) => {
+    const taskStatus = await TaskStatus.findOne({
+        name: req.params.id
+    })
+    if(taskStatus) {
+        res.json({taskStatus})
+    } else {
+        res.status(400)
+        throw new Error('Task Status not found')
+    }
+}
+
 
 module.exports = {
     getTasks,
     getTask,
     createTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    getTaskStatus
 }

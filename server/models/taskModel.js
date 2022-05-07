@@ -30,6 +30,10 @@ const taskSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        nature: {
+            type: String,
+            required: true
+        },
         project: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,

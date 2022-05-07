@@ -42,14 +42,17 @@ const Login = () => {
           const response = await axios.post(`/api/users/login`, { email: email, password: password })
           if (response.data.email === email) {
               setLoading(false)
+              console.log(response)
               let user = {
                   id: response.data._id,
                   firstName: response.data.firstName,
                   lastName: response.data.lastName,
                   email: response.data.email,
                   avatar: response.data.avatar,
+                  projects: response.data.projects,
               }
-              appDispatch({ type: "login", loggData: user, projects: response.data.projects, token: response.data.token })
+              
+              appDispatch({ type: "login", loggData: user, token: response.data.token })
               setCookie('auth', response.data.token, 1)
           }
       } catch (err) {

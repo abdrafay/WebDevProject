@@ -20,8 +20,8 @@ const App = () => {
     loggedIn: Boolean(getCookie("auth")),
     user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem('user')) : null,
     token: getCookie("auth") ? getCookie("auth") : null,
-    projects: localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem('tasks')) : [],
-    tasks: localStorage.getItem("projects") ? JSON.parse(localStorage.getItem('projects')) : [],
+    projects: localStorage.getItem("projects") ? JSON.parse(localStorage.getItem('projects')) : [],
+    tasks: localStorage.getItem("tasks") ? JSON.parse(localStorage.getItem('tasks')) : [],
   }
   const ourReducer = (state, action) => {
     switch (action.type) {
@@ -31,7 +31,6 @@ const App = () => {
           loggedIn: true,
           user: action.loggData,
           token: action.token,
-          projects: action.projects
         };
       case "logout":
         return {
@@ -40,6 +39,17 @@ const App = () => {
           user: null,
           token: null,
         };
+      case "SET_PROJECT":
+        return {
+          ...state,
+          projects: action.payload,
+        }
+      case "setTasks":
+        return {
+          ...state,
+          tasks: action.tasks,
+        }
+
       default:
         return state
       }

@@ -17,9 +17,9 @@ const getProjects = async (req, res) => {
         user: req.user._id
     })
     if(projects) {
-        res.json({
+        res.json(
             projects
-        })
+        )
     } else {
         res.status(400)
         throw new Error('Projects not found')
@@ -37,7 +37,12 @@ const getProject = async (req, res) => {
     const project = await Project.findById(req.params.id)
     if(project) {
         res.json({
-            project
+            _id: project._id,
+            name: project.name,
+            description: project.description,
+            users: project.users,
+            key: project.key,
+            tasks: project.tasks
         })
     } else {
         res.status(400)
@@ -82,7 +87,12 @@ if(user) {
     await user.save()
     if(createdProject) {
         res.json({
-            createdProject
+            _id: createdProject._id,
+            name: createdProject.name,
+            description: createdProject.description,
+            users: createdProject.users,
+            key: createdProject.key,
+            tasks: createdProject.tasks
         })
     } else {
         res.status(400)

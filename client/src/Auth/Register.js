@@ -46,8 +46,9 @@ const Register = () => {
             lastName: response.data.lastName,
             email: response.data.email,
             avatar: response.data.avatar,
+            projects: response.data.projects,
         }
-        appDispatch({ type: "login", loggData: user, projects: response.data.projects, token: response.data.token })
+        appDispatch({ type: "login", loggData: user, token: response.data.token })
         setCookie('auth', response.data.token, 1)
         setLoading(false)
         navigate('/')
