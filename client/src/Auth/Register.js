@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useContext} from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -10,8 +10,56 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import axios from "axios"
+import {setCookie} from '../Functions/cookies'
+import StateContext from "../StateContext"
+import DispatchContext from "../DispatchContext"
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const [loading, setLoading] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const appState = useContext(StateContext)
+  const appDispatch = useContext(DispatchContext)
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    if(password === confirmPassword){
+
+      if (firstName && lastName && email && password !== "") {
+        try {
+          const response = await axios.post(`/api/users`, {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+          })
+          let user = {
+            id: response.data._id,
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+            email: response.data.email,
+            avatar: response.data.avatar,
+        }
+        appDispatch({ type: "login", loggData: user, projects: response.data.projects, token: response.data.token })
+        setCookie('auth', response.data.token, 1)
+        setLoading(false)
+        navigate('/')
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } else {
+      alert("Passwords do not match")
+    }
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -29,7 +77,7 @@ const Register = () => {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <Stack
             mt={2}
             direction="row"
@@ -42,6 +90,8 @@ const Register = () => {
               required
               fullWidth
               id="fname"
+              onChange={(e)=>setFirstName(e.target.value)}
+              value={firstName}
               label="First Name"
               name="fname"
               autoComplete="fname"
@@ -51,6 +101,8 @@ const Register = () => {
               margin="normal"
               required
               fullWidth
+              onChange={(e)=>setLastName(e.target.value)}
+              value={lastName}
               name="lname"
               label="Last Name"
               type="text"
@@ -62,6 +114,8 @@ const Register = () => {
             margin="normal"
             required
             fullWidth
+            onChange={(e)=>setEmail(e.target.value)}
+            value={email}
             id="email"
             label="Email Address"
             name="email"
@@ -72,10 +126,24 @@ const Register = () => {
             margin="normal"
             required
             fullWidth
+            onChange={(e)=>setPassword(e.target.value)}
+            value={password}
             name="password"
             label="Password"
             type="password"
             id="password"
+            autoComplete="current-password"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            onChange={(e)=>setConfirmPassword(e.target.value)}
+            value={confirmPassword}
+            name="confirmPassword"
+            label="Confirm Password"
+            type="password"
+            id="con-password"
             autoComplete="current-password"
           />
 

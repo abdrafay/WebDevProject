@@ -40,11 +40,8 @@ const Login = () => {
       console.log('making Request')
       try {
           const response = await axios.post(`/api/users/login`, { email: email, password: password })
-          console.log(response)
           if (response.data.email === email) {
               setLoading(false)
-          //     // setSuccess(true)
-              // console.log(response.data)
               let user = {
                   id: response.data._id,
                   firstName: response.data.firstName,
@@ -54,16 +51,11 @@ const Login = () => {
               }
               appDispatch({ type: "login", loggData: user, projects: response.data.projects, token: response.data.token })
               setCookie('auth', response.data.token, 1)
-              // navigate to dashboard route
-              // navigate('/dashboard')
-
-              
           }
       } catch (err) {
           setLoading(false)
           console.log('error', err)
           // setAlertMessage({ open: true, message: e.response.data.message, alertSuccess: false })
-
       }
   }
 
