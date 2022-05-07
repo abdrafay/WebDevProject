@@ -86,9 +86,7 @@ export default function ProjectForm() {
                     onClick={handleNext}
                     sx={{ mt: 3, ml: 1 }}
                   >
-                    {activeStep === steps.length - 1
-                      ? "Create Project"
-                      : "Next"}
+                    {activeStep === steps.length - 1 ? "Create Task" : "Next"}
                   </Button>
                 </Box>
               </>

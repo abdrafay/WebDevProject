@@ -49,7 +49,7 @@ const Dashboard = () => {
             justifyContent: "space-between",
           }}
         >
-          <h1>Project</h1>
+          <h1>Task</h1>
           <Stack direction="row" spacing={3}>
             <Button
               variant="contained"

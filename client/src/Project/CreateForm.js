@@ -21,14 +21,23 @@ export default function CreateForm() {
             variant="standard"
           />
         </Grid> */}
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={6}>
           <TextField
             required
             id="task"
             name="task"
             label="Task Title"
             fullWidth
-            autoComplete="given-name"
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            required
+            id="nature"
+            name="anture"
+            label="Task Nature"
+            fullWidth
             variant="standard"
           />
         </Grid>
