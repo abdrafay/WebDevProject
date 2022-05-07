@@ -12,6 +12,7 @@ import JoinForm from "../Project/JoinForm";
 import StateContext from "../StateContext"
 import DispatchContext from "../DispatchContext";
 import axios from "axios"
+import {Link} from 'react-router-dom'
 
 const darkTheme = createTheme({
   palette: {
@@ -20,8 +21,8 @@ const darkTheme = createTheme({
 });
 
 const Dashboard = () => {
-  const [open, setOpen] = React.useState(false);
-  const [join, setJoin] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [join, setJoin] = useState(false);
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState([])
   const appState = useContext(StateContext)
@@ -97,7 +98,7 @@ const Dashboard = () => {
                 >
                   Create Project
                 </Button>
-                {/* <Button
+                <Button
                   variant="contained"
                   color="inherit"
                   justifyContent="left"
@@ -105,7 +106,7 @@ const Dashboard = () => {
                   onClick={handleJoin}
                 >
                   Join Project
-                </Button> */}
+                </Button>
               </Stack>
             </Box>
             {/* <ProjectList /> */}
@@ -115,9 +116,11 @@ const Dashboard = () => {
               
               projects.map((project, ind) => 
                  (
-                  <div className="col-lg-4 col-md-6 col-12" key={ind}>
-                    <h2>{project.name}</h2>
-                    <p>{project.description}</p>
+                  <div className="col-lg-4 col-md-6 col-12 projectCard" key={ind}>
+                    <Link to='/projects'>
+                      <h2>{project.name}</h2>
+                      <p>{project.description}</p>
+                    </Link>
                   </div> 
                   ) ) : '' }
               

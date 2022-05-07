@@ -14,7 +14,11 @@ const translator = short(); // Defaults to flickrBase58
  */
 const getProjects = async (req, res) => {
     const projects = await Project.find({
-        user: req.user._id
+        users: {
+            $elemMatch: {
+                _id: req.user._id
+            }
+        }
     })
     if(projects) {
         res.json(
@@ -82,6 +86,7 @@ if(user) {
     user.projects.push({
         _id: project._id,
         role: role._id,
+        
     })
     const createdProject = await project.save()
     await user.save()
@@ -161,44 +166,102 @@ const deleteProject = async (req, res) => {
 
 /**
  * @desc Add a user to a project
- * @route POST /api/projects/:id/addUser
+ * @route POST /api/projects/:id/user/add
  * @param {string} id
  * @param {string} user
+ * @param {string} email
  * @returns {object} project
  */
 const addUser = async (req, res) => {
     const project = await Project.findById(req.params.id)
+    
     if(project) {
-        const user = await User.findById(req.body.user)
-        if(user) {
-            let name = "User"
-            // const updUser = await User.findByIdAndUpdate(user._id, {
-            //     projects: [...user.projects, {
-            //     }]
-            // }, (err, data) => {
-            //     if(err) {
-            //         throw new Error('User not added')
-            //     } else {
-            //         console.log('User added')
-            //     }
-            // })
+            
+        
+        // const user = await User.findById(req.body.user)
+        // if(user) {
+        //     let name = "User"
+        //     // const updUser = await User.findByIdAndUpdate(user._id, {
+        //     //     projects: [...user.projects, {
+        //     //     }]
+        //     // }, (err, data) => {
+        //     //     if(err) {
+        //     //         throw new Error('User not added')
+        //     //     } else {
+        //     //         console.log('User added')
+        //     //     }
+        //     // })
 
+        //     const role = await Role.findOne({ name })
+        //     project.users.push({
+        //         _id: req.user._id,
+        //         role: role._id,
+        //         status: 'pending'
+        //     })
+        //     user.projects.push({
+        //         _id: project._id,
+        //         role: role._id,
+        //     })
+        //     await user.save()
+        //     // add this project to the user
+        //     await project.save()
+        //     res.json({
+        //         project
+        //     })
+        // } else {
+        //     res.status(400)
+        //     throw new Error('User not found')
+        // }
+    } else {
+        res.status(400)
+        throw new Error('Project not found')
+    }
+}
+
+/**
+ * @desc Join a project by using the project key
+ * @route POST /api/projects/join/
+ * @param {string} key
+ * @returns {object} project
+ * @access Private
+ */
+
+ const joinProject = async (req, res) => {
+    // find project by key
+    const project = await Project.findOne({
+        key: req.body.key
+    })
+    if(project) {
+        // find user with id in the project
+        let pr = project.users.find(user => user._id === req.user._id)
+        
+        // y
+        // console.log(pr)
+        if(pr > 0) {
+            
+            let name = "User"
             const role = await Role.findOne({ name })
+            const user = await User.findById(req.user._id)
             project.users.push({
-                user: req.user._id,
+                _id: req.user._id,
                 role: role._id,
-                status: 'pending'
+                status: 'joined'
+            })
+            user.projects.push({
+                _id: project._id,
+                role: role._id,
             })
             await user.save()
-            // add this project to the user
             await project.save()
-            res.json({
+            res.json(
                 project
-            })
+            )
         } else {
             res.status(400)
-            throw new Error('User not found')
+            throw new Error('User already in project')
+            
         }
+        
     } else {
         res.status(400)
         throw new Error('Project not found')
@@ -213,5 +276,6 @@ module.exports = {
     updateProject,
     deleteProject,
     addUser,
+    joinProject
     
 }

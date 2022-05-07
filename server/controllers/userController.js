@@ -170,40 +170,5 @@ const updateUserProfile = async (req, res) => {
     }
 }   
 
-/**
- * @desc Join a project by using the project key
- * @route PUT /api/projects/join
- * @param {string} key
- * @returns {object} project
- * @access Private
- */
 
- const joinProject = async (req, res) => {
-    const project = await Project.findOne({
-        key: req.body.key
-    })
-    if(project) {
-        // find user with id in the project
-        let ind = projects.users.findIndex(user => {
-            return user.user === req.user._id
-        })
-        const user = await User.findById(req.user._id)
-        project.users[ind].status = 'joined'
-        user.projects.push({
-            project: project._id,
-            role: role._id,
-            tasks: []
-        })
-        await user.save()
-        await project.save()
-        res.json({
-            project
-        })
-    } else {
-        res.status(400)
-        throw new Error('Project not found')
-    }
-}
-
-
-module.exports = { authUser, registerUser, getUserProfile, updateUserProfile ,joinProject }
+module.exports = { authUser, registerUser, getUserProfile, updateUserProfile  }
