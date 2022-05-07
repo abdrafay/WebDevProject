@@ -13,7 +13,6 @@ app.use('/api/projects', require('./routes/projectRoutes'), require('./routes/ta
 app.use('/api/positions', require('./routes/disPosRoutes'))
 app.use('/api/roles', require('./routes/roleRoutes'))
 
-const __dirname = path.resolve()
 
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static('client/build'))

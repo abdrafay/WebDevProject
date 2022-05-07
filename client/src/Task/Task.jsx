@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useEffect, useContext }from "react";
 import TaskList from "./TaskList";
 import TaskForm from "./TaskForm";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -9,6 +9,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import ShareIcon from "@mui/icons-material/Share";
 import JoinForm from "../Project/JoinForm";
+import axios from "axios";
+import StateContext from "../StateContext";
+import DispatchContext from "../DispatchContext";
+
+// get id from params
+import { useParams } from "react-router-dom";
 
 const darkTheme = createTheme({
   palette: {
@@ -19,6 +25,26 @@ const darkTheme = createTheme({
 const Task = () => {
   const [open, setOpen] = React.useState(false);
   const [join, setJoin] = React.useState(false);
+  const [tasks, setTasks] = React.useState([]);
+  const [loading,setLoading] = React.useState(true);
+  const appState = useContext(StateContext);
+  const appDispatch = useContext(DispatchContext);
+  let {id} = useParams();
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const response = await axios.get(`/api/projects/${id}/tasks`, {
+        headers: {
+          Authorization: `Bearer ${appState.token}`,
+        }
+      })
+      setTasks(response.data)
+      appDispatch({ type: "setTasks", tasks: response.data })
+      setLoading(false)
+    }
+    fetchData();
+      
+  },[id])
 
   const handleJoin = () => {
     setJoin(true);
@@ -35,7 +61,7 @@ const Task = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  if(!loading){
   return (
     <ThemeProvider theme={darkTheme}>
       <Container>
@@ -70,7 +96,7 @@ const Task = () => {
             </Button> */}
           </Stack>
         </Box>
-        <TaskList />
+        <TaskList tasks={tasks} setTasks={setTasks}/>
       </Container>
       <div>
         <Dialog
@@ -106,6 +132,9 @@ const Task = () => {
       </div>
     </ThemeProvider>
   );
+          } else {
+            return <div>Loading...</div>
+          }
 };
 
 export default Task;

@@ -8,15 +8,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./Dashboard/Dashboard";
 import StateContext from "./StateContext";
 import DispatchContext from "./DispatchContext";
-import { getCookie } from "./Functions/cookies";
+import { getCookie, setCookie, erase } from "./Functions/cookies";
 import Task from "./Task/Task";
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
   },
 });
 
-const App = () => {
+const App = ({history}) => {
   const initialState = {
     loggedIn: Boolean(getCookie("auth")),
     user: localStorage.getItem("user")
@@ -39,7 +40,7 @@ const App = () => {
           user: action.loggData,
           token: action.token,
         };
-      case "logout":
+      case "LOGOUT":
         return {
           ...state,
           loggedIn: false,
@@ -66,20 +67,37 @@ const App = () => {
   useEffect(() => {
     if (state.loggedIn) {
       localStorage.setItem("projects", JSON.stringify(state.projects));
+    } else {
+      localStorage.removeItem("projects");
     }
   }, [state.loggedIn, state.projects]);
   // set Tasks to LocalStorage
   useEffect(() => {
     if (state.loggedIn) {
       localStorage.setItem("tasks", JSON.stringify(state.tasks));
+    } else {
+      localStorage.removeItem("tasks");
     }
   }, [state.loggedIn, state.tasks]);
   // set User Details to Local Storage
   useEffect(() => {
     if (state.loggedIn) {
       localStorage.setItem("user", JSON.stringify(state.user));
+    } else {
+      localStorage.removeItem("user");
     }
   }, [state.loggedIn, state.user]);
+  // set And Remove Token from cookie using cookies functions
+  useEffect(() => {
+    if (state.loggedIn) {
+      setCookie("auth", state.token,1);
+    } else {
+      erase("auth");
+      // navigate("/")
+      console.log(history)
+    }
+  }, [state.loggedIn, state.token]);
+
   return (
     <StateContext.Provider value={state}>
       <DispatchContext.Provider value={dispatch}>
@@ -90,7 +108,7 @@ const App = () => {
               {state.loggedIn ? (
                 <>
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/key/Task" element={<Task />} />
+                  <Route path="/project/:id" element={<Task />} />
                 </>
               ) : (
                 <>

@@ -44,7 +44,7 @@ const taskSchema = mongoose.Schema(
             ref: 'User'
         },
         status: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             required: true,
             ref: 'TaskStatus'
         },

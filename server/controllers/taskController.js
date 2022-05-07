@@ -14,7 +14,7 @@ const getTasks = async (req, res) => {
         project: req.params.id
     })
     if(tasks) {
-        res.json({tasks})
+        res.json(tasks)
     } else {
         res.status(400)
         throw new Error('Tasks not found')
@@ -31,7 +31,7 @@ const getTasks = async (req, res) => {
 const getTask = async (req, res) => {
     const task = await Task.findById(req.params.id)
     if(task) {
-        res.json({task})
+        res.json(task)
     }
     else {
         res.status(400)
@@ -50,14 +50,12 @@ const getTask = async (req, res) => {
  */
 const createTask = async (req, res) => {
     // get todo task status
-    const status = await TaskStatus.findOne({
-        name: 'Todo'
-    })
+    
     const task = new Task({
         name: req.body.name,
         description: req.body.description,
         project: req.params.id,
-        status: status._id,
+        status: "Todo",
         startTime: req.body.startTime,
         endTime: req.body.endTime,
         nature: req.body.nature,

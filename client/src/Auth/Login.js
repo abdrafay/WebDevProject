@@ -53,7 +53,6 @@ const Login = () => {
               }
               
               appDispatch({ type: "login", loggData: user, token: response.data.token })
-              setCookie('auth', response.data.token, 1)
           }
       } catch (err) {
           setLoading(false)

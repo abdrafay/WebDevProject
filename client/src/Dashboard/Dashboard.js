@@ -11,12 +11,8 @@ import ShareIcon from "@mui/icons-material/Share";
 import JoinForm from "../Project/JoinForm";
 import StateContext from "../StateContext";
 import DispatchContext from "../DispatchContext";
-<<<<<<< HEAD
 import axios from "axios";
-=======
-import axios from "axios"
 import {Link} from 'react-router-dom'
->>>>>>> 3eaf0fcd748e87ccd95091994d17ca1e8c081654
 
 const darkTheme = createTheme({
   palette: {
@@ -25,21 +21,12 @@ const darkTheme = createTheme({
 });
 
 const Dashboard = () => {
-<<<<<<< HEAD
   const [open, setOpen] = React.useState(false);
   const [join, setJoin] = React.useState(false);
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState([]);
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
-=======
-  const [open, setOpen] = useState(false);
-  const [join, setJoin] = useState(false);
-  const [loading, setLoading] = useState(true)
-  const [projects, setProjects] = useState([])
-  const appState = useContext(StateContext)
-  const appDispatch = useContext(DispatchContext)
->>>>>>> 3eaf0fcd748e87ccd95091994d17ca1e8c081654
   const handleJoin = () => {
     setJoin(true);
   };
@@ -70,9 +57,9 @@ const Dashboard = () => {
           type: "SET_PROJECT",
           payload: response.data,
         });
-        console.log(response.data);
+   
         setProjects(response.data);
-        console.log("project", projects);
+     
         setLoading(false);
         // console.log('setting to false')
       } catch (err) {
@@ -85,7 +72,6 @@ const Dashboard = () => {
   if (loading) {
     return <h1>Loading...</h1>;
   } else {
-<<<<<<< HEAD
     return (
       <ThemeProvider theme={darkTheme}>
         <Container>
@@ -109,33 +95,7 @@ const Dashboard = () => {
               >
                 Create Project
               </Button>
-              {/* <Button
-=======
-      return (
-        <ThemeProvider theme={darkTheme}>
-          <Container>
-            <Box
-              sx={{
-                mt: 5,
-                mb: 3,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <h1>Project</h1>
-              <Stack direction="row" spacing={3}>
-                <Button
-                  variant="contained"
-                  color="inherit"
-                  startIcon={<AddCircleOutlineIcon />}
-                  onClick={handleClickOpen}
-                >
-                  Create Project
-                </Button>
-                <Button
->>>>>>> 3eaf0fcd748e87ccd95091994d17ca1e8c081654
+              <Button
                   variant="contained"
                   color="inherit"
                   justifyContent="left"
@@ -143,8 +103,7 @@ const Dashboard = () => {
                   onClick={handleJoin}
                 >
                   Join Project
-<<<<<<< HEAD
-                </Button> */}
+                </Button>
             </Stack>
           </Box>
           {/* <ProjectList /> */}
@@ -152,49 +111,16 @@ const Dashboard = () => {
           <div className="row m-0">
             {projects.length !== 0
               ? projects.map((project, ind) => (
-                  <div className="col-lg-4 col-md-6 col-12" key={ind}>
-                    <h2>{project.name}</h2>
-                    <p>{project.description}</p>
-                  </div>
-                ))
-              : ""}
-=======
-                </Button>
-              </Stack>
-            </Box>
-            {/* <ProjectList /> */}
-            {/* Row */}
-            <div className="row m-0">
-            { projects.length !== 0  ?
-              
-              projects.map((project, ind) => 
-                 (
-                  <div className="col-lg-4 col-md-6 col-12 projectCard" key={ind}>
-                    <Link to='/projects'>
+                  <div className="col-lg-4 col-md-6 col-12 mt-4" key={ind}>
+                    <div className="projectCard">
+                    <Link to={`/project/${project._id}`}>
                       <h2>{project.name}</h2>
                       <p>{project.description}</p>
                     </Link>
-                  </div> 
-                  ) ) : '' }
-              
-            </div>
-          </Container>
-          <div>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              maxWidth={"md"}
-              fullWidth={true}
-            >
-              {/* <DialogTitle>Project Form</DialogTitle> */}
-              <DialogContent>
-                <ProjectForm />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-              </DialogActions>
-            </Dialog>
->>>>>>> 3eaf0fcd748e87ccd95091994d17ca1e8c081654
+                    </div>
+                  </div>
+                ))
+              : ""}
           </div>
         </Container>
         <div>
@@ -206,7 +132,8 @@ const Dashboard = () => {
           >
             {/* <DialogTitle>Project Form</DialogTitle> */}
             <DialogContent>
-              <ProjectForm />
+              <ProjectForm projects={projects} setProjects={setProjects} handleClose={handleClose} />
+
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>

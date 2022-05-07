@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useEffect, useState} from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -27,32 +27,7 @@ function createData(title, nature, startdate, enddate, status, owner) {
 
 const status = ["Todo", "In Progress", "Completed", "Closed"];
 
-const rows = [
-  createData(
-    "Web Development",
-    "Bug",
-    "2017-05-24",
-    "2017-05-24",
-    "todo",
-    "John Doe"
-  ),
-  createData(
-    "Speed Programming",
-    "Task",
-    "2017-05-24",
-    "2017-05-24",
-    "completed",
-    "John Doe"
-  ),
-  createData(
-    "Data Science",
-    "Bug",
-    "2017-05-24",
-    "2017-05-24",
-    "closed",
-    "Sami"
-  ),
-];
+
 
 const options = ["Edit", "Delete"];
 
@@ -76,8 +51,36 @@ function getStyles(status, personName, theme) {
   };
 }
 
-export default function TaskList() {
+export default function TaskList({tasks, setTasks}) {
   const theme = useTheme();
+  const [rows, setRows] = useState([]);
+  const createAvatar = (st) => {
+    return st[0]
+  }
+
+  // useEffect(() => {
+  //   if(tasks.length !== 0){
+  //     console.log( "tasks",tasks)
+  //     tasks.map(task => {
+  //       setRows([
+  //         ...rows,
+  //           createData(
+  //             task.name,
+  //             task.nature,
+  //             task.startTime,
+  //             task.endTime,
+  //             task.status,
+  //             task.user !== null ? task.user : "Unassigned" 
+  //           )
+  //         ])
+  //       })
+
+  //     console.log(rows)
+  //   } else {
+  //     // rows.push(createData("No tasks", "", "", "", "", ""))
+  //   }
+  // }, [tasks])
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [personName, setPersonName] = React.useState([]);
@@ -139,13 +142,13 @@ export default function TaskList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row, ind) => (
+          {tasks.length !== 0 ? tasks.map((row, ind) => (
             <TableRow
               key={ind}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.title}
+                {row.name}
               </TableCell>
               <TableCell align="center">
                 <Chip
@@ -153,8 +156,8 @@ export default function TaskList() {
                   color={row.nature === "Bug" ? "error" : "warning"}
                 />
               </TableCell>
-              <TableCell align="center">{row.startdate}</TableCell>
-              <TableCell align="center">{row.enddate}</TableCell>
+              <TableCell align="center">{row.startTime}</TableCell>
+              <TableCell align="center">{row.endTime}</TableCell>
               <TableCell align="center">
                 {/* <Chip
                   label={row.status}
@@ -195,8 +198,8 @@ export default function TaskList() {
               <TableCell align="center">
                 <Chip
                   color="secondary"
-                  avatar={<Avatar> {row.owner[0]} </Avatar>}
-                  label={row.owner}
+                  avatar={<Avatar> {row.user ? createAvatar(row.user) : createAvatar("Unassigned")} </Avatar>}
+                  label={row.user ? row.user : "Unassigned"}
                 />
               </TableCell>
               <TableCell>
@@ -235,7 +238,7 @@ export default function TaskList() {
                 </div>
               </TableCell>
             </TableRow>
-          ))}
+          )) : "NO TASKS"}
         </TableBody>
       </Table>
     </TableContainer>
