@@ -1,6 +1,6 @@
 import React from "react";
-import ProjectList from "../Project/ProjectList";
-import ProjectForm from "../Project/ProjectForm";
+import TaskList from "./TaskList";
+import TaskForm from "./TaskForm";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Box, Button, Container, Stack } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
@@ -70,7 +70,7 @@ const Task = () => {
             </Button> */}
           </Stack>
         </Box>
-        <ProjectList />
+        <TaskList />
       </Container>
       <div>
         <Dialog
@@ -81,7 +81,7 @@ const Task = () => {
         >
           {/* <DialogTitle>Project Form</DialogTitle> */}
           <DialogContent>
-            <ProjectForm />
+            <TaskForm />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
