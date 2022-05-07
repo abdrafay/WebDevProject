@@ -1,122 +1,99 @@
 import * as React from "react";
-
+import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { TextField } from "@mui/material";
+import CreateForm from "./CreateForm";
+import MemberForm from "./MemberForm";
+import DateForm from "./DateForm";
 
 const steps = ["Create a project", "Add Members", "Set Deadline"];
 
-export default function HorizontalLinearStepper() {
+function getStepContent(step) {
+  switch (step) {
+    case 0:
+      return <CreateForm />;
+    case 1:
+      return <MemberForm />;
+    case 2:
+      return <DateForm />;
+    default:
+      throw new Error("Unknown step");
+  }
+}
+
+// const theme = createTheme();
+
+export default function ProjectForm() {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
-
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
-
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
 
   const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+    setActiveStep(activeStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
+    setActiveStep(activeStep - 1);
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => {
-          const stepProps = {};
-          const labelProps = {};
-          return (
-            <Step key={label} {...stepProps}>
-              <StepLabel {...labelProps}>{label}</StepLabel>
-            </Step>
-          );
-        })}
-      </Stepper>
-      <Box
-        sx={{
-          mt: 5,
-          mb: 3,
-          display: "flex",
-          //   flexDirection: "row",
-          //   alignItems: "center",
-          //   justifyContent: "space-between",
-        }}
-      >
-        <TextField
-          autoFocus
-          margin="dense"
-          id="title"
-          label="Project Title"
-          fullWidth
-          variant="standard"
-        />
-      </Box>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+    <>
+      <CssBaseline />
+      <Container component="main" maxWidth="md" sx={{ mb: 2 }}>
+        <Paper
+          variant="outlined"
+          sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
+        >
+          <Typography component="h1" variant="h4" align="center">
+            Task Creation
           </Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </Box>
-        </React.Fragment>
-      )}
-    </Box>
+          <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <>
+            {activeStep === steps.length ? (
+              <>
+                <Typography variant="h5" gutterBottom>
+                  Task has Been Created.
+                </Typography>
+                <Typography variant="subtitle1">
+                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                  Dignissimos sint incidunt fugit doloremque quia assumenda
+                  provident, labore cupiditate est cum dolores voluptatem nihil
+                  ab itaque distinctio delectus? Deleniti, natus officiis.
+                </Typography>
+              </>
+            ) : (
+              <>
+                {getStepContent(activeStep)}
+                <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                  {activeStep !== 0 && (
+                    <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
+                      Back
+                    </Button>
+                  )}
+
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    sx={{ mt: 3, ml: 1 }}
+                  >
+                    {activeStep === steps.length - 1 ? "Create Task" : "Next"}
+                  </Button>
+                </Box>
+              </>
+            )}
+          </>
+        </Paper>
+      </Container>
+    </>
   );
 }
